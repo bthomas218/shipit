@@ -41,7 +41,5 @@ ${idea}
     },
   });
 
-  console.log(response.output_text);
-
   return response.output_parsed;
 }

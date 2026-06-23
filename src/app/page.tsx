@@ -3,8 +3,18 @@
 import { Rocket } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
+
+  const [idea, setIdea] = useState("A habit tracker for remote teams");
+
+  const handleClick = () => {
+    router.push(`/results?idea=${idea}`);
+  };
+
   return (
     <main className="min-h-full bg-background text-foreground">
       <section className="flex min-h-screen items-center px-6 py-16">
@@ -47,9 +57,15 @@ export default function Home() {
               name="project-idea"
               type="text"
               placeholder="A habit tracker for remote teams"
+              onChange={(e) => setIdea(e.target.value)}
               className="h-11 min-w-0 flex-1 rounded-lg border bg-background px-4 text-base outline-none transition-shadow placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             />
-            <Button type="submit" size="lg" className="h-11 px-5 text-base">
+            <Button
+              type="submit"
+              size="lg"
+              className="h-11 px-5 text-base"
+              onClick={handleClick}
+            >
               Submit
             </Button>
           </form>
