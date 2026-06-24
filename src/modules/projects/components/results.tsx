@@ -116,7 +116,9 @@ export default function Results({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline">Regenerate</Button>
+            <Button variant="outline" onClick={() => location.reload()}>
+              Regenerate
+            </Button>
             <Button>
               Start building
               <ArrowRight data-icon="inline-end" />
