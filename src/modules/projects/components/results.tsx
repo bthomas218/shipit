@@ -27,6 +27,7 @@ type ResultCard =
       icon: typeof Lightbulb;
       accent: string;
       content: string;
+      fallback: string;
     }
   | {
       type: "list";
@@ -35,14 +36,23 @@ type ResultCard =
       icon: typeof Lightbulb;
       accent: string;
       items: string[];
+      fallback: string;
     };
 
 type Props = {
-  mvpScope: string[];
-  concept: string;
-  featuresToCut: string[];
-  starterTasks: string[];
+  mvpScope?: string[] | null;
+  concept?: string | null;
+  featuresToCut?: string[] | null;
+  starterTasks?: string[] | null;
 };
+
+function EmptyResult({ children }: { children: string }) {
+  return (
+    <div className="rounded-lg border border-dashed bg-muted/30 px-4 py-6 text-center text-sm text-muted-foreground">
+      {children}
+    </div>
+  );
+}
 
 export default function Results({
   mvpScope: mvp,
@@ -57,7 +67,8 @@ export default function Results({
       description: "The focused version of the generated idea.",
       icon: Lightbulb,
       accent: "bg-amber-50 text-amber-700 ring-amber-200",
-      content: concept,
+      content: concept?.trim() ?? "",
+      fallback: "No concept was generated. Try regenerating the results.",
     },
     {
       type: "list",
@@ -65,7 +76,8 @@ export default function Results({
       description: "The smallest useful product to ship first.",
       icon: CheckCircle2,
       accent: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-      items: mvp,
+      items: mvp?.filter((item) => item.trim()) ?? [],
+      fallback: "No MVP scope was generated yet.",
     },
     {
       type: "list",
@@ -73,7 +85,8 @@ export default function Results({
       description: "Useful later, distracting now.",
       icon: Scissors,
       accent: "bg-rose-50 text-rose-700 ring-rose-200",
-      items: featuresToCut,
+      items: featuresToCut?.filter((item) => item.trim()) ?? [],
+      fallback: "No features were identified to cut.",
     },
     {
       type: "list",
@@ -81,7 +94,8 @@ export default function Results({
       description: "The next concrete build steps.",
       icon: ClipboardList,
       accent: "bg-sky-50 text-sky-700 ring-sky-200",
-      items: starterTasks,
+      items: starterTasks?.filter((item) => item.trim()) ?? [],
+      fallback: "No starter tasks were generated yet.",
     },
   ];
   return (
@@ -136,18 +150,24 @@ export default function Results({
                 </CardHeader>
                 <CardContent>
                   {card.type === "list" ? (
-                    <ul className="space-y-3">
-                      {card.items.map((item) => (
-                        <li key={item} className="flex gap-3 leading-6">
-                          <span className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
+                    card.items.length > 0 ? (
+                      <ul className="space-y-3">
+                        {card.items.map((item) => (
+                          <li key={item} className="flex gap-3 leading-6">
+                            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <EmptyResult>{card.fallback}</EmptyResult>
+                    )
+                  ) : card.content ? (
                     <p className="leading-7 text-muted-foreground">
                       {card.content}
                     </p>
+                  ) : (
+                    <EmptyResult>{card.fallback}</EmptyResult>
                   )}
                 </CardContent>
               </Card>
