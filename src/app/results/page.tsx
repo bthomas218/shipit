@@ -14,7 +14,7 @@ export default async function Page({
   }
   const res = await getProject(idea);
   if (!res) {
-    return <div>Something went wrong</div>;
+    throw new Error("Failed to generate project results");
   }
   const { mvpScope, featuresToCut, concept, starterTasks } = res;
   return (
