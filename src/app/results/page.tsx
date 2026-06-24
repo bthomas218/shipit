@@ -10,7 +10,7 @@ export default async function Page({
 }) {
   const { idea } = await searchParams;
   if (!idea) {
-    return <div>Missing idea</div>;
+    throw new Error("Missing Idea");
   }
   const res = await getProject(idea);
   if (!res) {
