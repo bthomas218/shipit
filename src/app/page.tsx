@@ -4,14 +4,15 @@ import { Rocket } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Home() {
   const router = useRouter();
 
   const [idea, setIdea] = useState("A habit tracker for remote teams");
 
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent) => {
+    event.preventDefault();
     router.push(`/results?idea=${idea}`);
   };
 
